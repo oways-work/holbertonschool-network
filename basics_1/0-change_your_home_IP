@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
 # Configures local DNS resolution for localhost and facebook.com
-sed -i 's/127.0.0.1/127.0.0.2/g' /etc/hosts
+
+# Write the modified content to a temporary file first
+sed 's/127.0.0.1/127.0.0.2/g' /etc/hosts > /tmp/new_hosts
+
+# Overwrite the contents of the original file (bypasses Docker lock)
+cat /tmp/new_hosts > /etc/hosts
+
+# Append the new rule
 echo "8.8.8.8 facebook.com" >> /etc/hosts
+
+# Clean up the temporary file
+rm -f /tmp/new_hosts
